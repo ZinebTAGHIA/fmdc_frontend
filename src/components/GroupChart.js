@@ -1,15 +1,12 @@
+import axios from "../api/axios";
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
-class DemandesChart extends React.Component {
+class GroupChart extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      series: [
-        {
-          data: [props.nbrDemEnAtt, props.nbrDemVal, props.nbrDemRef],
-        },
-      ],
+      series: [],
       options: {
         chart: {
           height: 350,
@@ -38,7 +35,7 @@ class DemandesChart extends React.Component {
           position: "top",
         },
         xaxis: {
-          categories: ["en attente", "validées", "refusées"],
+          categories: props.pws.map((pw) => pw.title),
           labels: {
             style: {
               fontSize: "12px",
@@ -48,12 +45,44 @@ class DemandesChart extends React.Component {
       },
     };
   }
+  componentDidMount() {
+    this.fetchChartData();
+  }
 
+  fetchChartData = () => {
+    const { pws } = this.props;
+
+    const requests = pws.map((pw) =>
+      axios
+        .get(`/api/pws/nbrGroup/${pw.id}`)
+        .then((response) => response.data)
+        .catch((error) => {
+          console.error(error);
+          return null;
+        })
+    );
+
+    Promise.all(requests)
+      .then((responseData) => {
+        const seriesData = [
+          {
+            data: responseData.filter(Boolean),
+          },
+        ];
+
+        this.setState({ series: seriesData });
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
   render() {
+    const { options, series } = this.state;
+
     return (
       <ReactApexChart
-        options={this.state.options}
-        series={this.state.series}
+        options={options}
+        series={series}
         type="bar"
         width={380}
       />
@@ -61,4 +90,4 @@ class DemandesChart extends React.Component {
   }
 }
 
-export default DemandesChart;
+export default GroupChart;

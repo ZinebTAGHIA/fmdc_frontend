@@ -1,10 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
-const ComptesChart = (props) => {
-  const [series, setSeries] = useState([
-    props.nbrComptesAct,
-    props.nbrComptesDesact,
-  ]);
+import axios from "../api/axios";
+
+const StudentChart = (props) => {
+  const [series, setSeries] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const requests = props.groups.map((group) =>
+          axios.get(`/api/groups/nbrStudent/${group.id}`)
+        );
+
+        const responses = await Promise.all(requests);
+
+        const data = responses.map((response) => response.data);
+
+        setSeries(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, [props.groups]);
 
   const options = {
     chart: {
@@ -18,7 +37,7 @@ const ComptesChart = (props) => {
       colors: ["#008FFB", "#FF4560"],
       opacity: 0.9,
     },
-    labels: ["activés", "désactivés"],
+    labels: props.groups.map((group) => group.code),
     legend: {
       position: "top",
       markers: {
@@ -51,4 +70,4 @@ const ComptesChart = (props) => {
   );
 };
 
-export default ComptesChart;
+export default StudentChart;

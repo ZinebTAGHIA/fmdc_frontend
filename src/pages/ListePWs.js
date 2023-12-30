@@ -481,17 +481,23 @@ const ListePWs = () => {
               rows={10}
               emptyMessage="Aucun TP trouvée."
             >
-              <Column field="id" header="ID" sortable />
-              <Column field="title" header="Titre" />
-              <Column field="objectif" header="Objectif" />
-              <Column field="docs" header="Docs" />
-              <Column field={(rowData) => rowData.tooth.name} header="Dent" />
+              <Column key="id" field="id" header="ID" sortable />
+              <Column key="title" field="title" header="Titre" />
+              <Column key="objectif" field="objectif" header="Objectif" />
+              <Column key="docs" field="docs" header="Docs" />
               <Column
+                key="tooth"
+                field={(rowData) => rowData.tooth.name}
+                header="Dent"
+              />
+              <Column
+                key="groups"
                 field="groups"
                 header="Groupes"
                 body={groupBodyTemplate}
               />
               <Column
+                key="operations"
                 field="operations"
                 header="Opérations"
                 body={(rowData) => operationsBodyTemplate(rowData)}

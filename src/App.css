@@ -414,6 +414,28 @@ main .content-data .head h3 {
   font-weight: 600;
 }
 
+main .content-data .chartContainer {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+main .content-data .chartContainer::-webkit-scrollbar {
+  display: none;
+}
+
+#GroupChart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#StudentChart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* MAIN */
 /* CONTENT */
 
