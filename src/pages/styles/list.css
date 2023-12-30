@@ -1,0 +1,142 @@
+/* .p-inputtext {
+  font-family: var(--font-family);
+  font-feature-settings: var(--font-feature-settings, normal);
+  font-size: 1rem;
+  color: #495057;
+  background: #ffffff;
+  padding: 0.75rem 0.75rem;
+  border: 1px solid #ced4da;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+  appearance: none;
+  border-radius: 6px;
+}
+
+.p-input-icon-left > .p-inputtext {
+  padding-left: 2rem;
+}
+
+.p-input-icon-left > .p-inputtext {
+  padding-left: 2rem;
+}
+.p-datatable .p-datatable-header {
+  background: #f8f9fa;
+  color: #495057;
+  border: 1px solid #e9ecef;
+  border-width: 1px 0 1px 0;
+  padding: 1rem 1rem;
+  font-weight: 600;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  text-align: left;
+  padding: 1rem 1rem;
+  border: 1px solid #e9ecef;
+  border-width: 0 0 1px 0;
+  font-weight: 600;
+  color: #495057;
+  background: #f8f9fa;
+  transition: box-shadow 0.2s;
+}
+.p-datatable .p-column-header-content {
+  display: flex;
+  align-items: center;
+}
+
+.p-datatable .p-datatable-tbody > tr {
+  background: #ffffff;
+  color: #495057;
+  transition: box-shadow 0.2s;
+}
+.p-datatable .p-datatable-tbody > tr > td {
+  text-align: left;
+  border: 1px solid #e9ecef;
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+}
+.p-datatable > .p-datatable-wrapper {
+  overflow: auto;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  text-align: left;
+  border: 1px solid #e9ecef;
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+}
+.p-component,
+.p-component * {
+  box-sizing: border-box;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  text-align: left;
+  border: 1px solid #e9ecef;
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+}
+.p-datatable .p-datatable-tbody > tr > td {
+  text-align: left;
+  border: 1px solid #dee2e6;
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+}
+.p-component,
+.p-component * {
+  box-sizing: border-box;
+}
+* {
+  box-sizing: border-box;
+}
+* {
+  box-sizing: border-box;
+}
+.p-datatable .p-datatable-tbody > tr {
+  background: #ffffff;
+  color: #495057;
+  transition: box-shadow 0.2s;
+}
+.p-datatable .p-datatable-tbody > tr {
+  background: #ffffff;
+  color: #495057;
+  transition: box-shadow 0.2s;
+}
+.p-datatable .p-datatable-tbody > tr {
+  background: #ffffff;
+  color: #495057;
+  transition: box-shadow 0.2s;
+}
+.p-datatable-table {
+  border-spacing: 0px;
+  width: 100%;
+}
+
+.p-datatable {
+  position: relative;
+}
+
+.p-dialog-draggable .p-dialog-header {
+  cursor: move;
+}
+
+.p-dialog .p-dialog-header {
+  border-bottom: 0 none;
+  background: #ffffff;
+  color: #495057;
+  padding: 1.5rem;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+
+.p-dialog {
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  max-height: 90%;
+  transform: scale(1);
+  position: relative;
+}
+
+.p-dialog-mask.p-component-overlay {
+  pointer-events: auto;
+} */
