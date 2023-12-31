@@ -69,6 +69,66 @@ const Container = styled.div`
   input[type="file"]::file-selector-button:hover {
     background: #0c5fcd;
   }
+  .grid {
+    display: flex;
+  }
+
+  .imgContainer {
+    flex: 1;
+    margin: 30px;
+  }
+
+  .settings {
+    flex: 3;
+    margin-right: 100px;
+    color: #495057;
+  }
+
+  #photo {
+    margin: 5px;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    width: 300px;
+    height: 35px;
+    border-radius: 3px;
+    border-width: thin;
+    margin-top: 8px !important;
+    color: #495057;
+    font-size: 1rem;
+    font-weight: normal;
+  }
+  #userName:hover,
+  #password:hover {
+    border-color: #2196f3;
+  }
+  #userName:focus,
+  #userName:focus,
+  #password:focus {
+    border-color: #2196f3;
+    box-shadow: 0 0 0 1px #2196f3, 0 0 0 3px rgba(33, 150, 243, 0.3);
+    outline: none;
+  }
+
+  .formgrid {
+    display: grid;
+    grid-template-columns: repeat(2, calc(50% - 5px));
+    grid-gap: 0;
+  }
+
+  .field {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .field input {
+    width: calc(100% - 20px);
+    padding: 10px;
+  }
+  .p-card-body {
+    padding-right: 41px;
+  }
 `;
 
 const Profil = (props) => {
@@ -309,14 +369,12 @@ const Profil = (props) => {
                         />
                       </div>
                       <div className="field col-12 md:col-3">
-                        <button
-                          type="button"
-                          className="text-white px-3 py-2 text-base border-1 border-solid border-round cursor-pointer transition-all transition-duration-200"
+                        <Button
+                          label="Modifier"
+                          className="mr-2 hide"
                           id="btn-modifier"
                           onClick={onModifierClick}
-                        >
-                          Modifer
-                        </button>
+                        ></Button>
                       </div>
                       <div className="field col-12 md:col-3">
                         <Toast ref={toast} />
