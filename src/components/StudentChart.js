@@ -34,15 +34,11 @@ const StudentChart = (props) => {
       },
     },
     fill: {
-      colors: ["#008FFB", "#FF4560"],
       opacity: 0.9,
     },
     labels: props.groups.map((group) => group.code),
     legend: {
       position: "top",
-      markers: {
-        fillColors: ["#008FFB", "#FF4560"],
-      },
     },
     tooltip: {
       fillSeriesColor: false,

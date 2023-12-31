@@ -20,7 +20,6 @@ class GroupChart extends React.Component {
             show: true,
           },
         },
-        colors: ["#008FFB", "#00FFFF", "#FF4560"],
         plotOptions: {
           bar: {
             columnWidth: "45%",
