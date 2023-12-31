@@ -23,12 +23,12 @@ const Container = styled.div`
 `;
 
 const Dashboard = ({ user }) => {
-  const [nbrStudents, setNbrStudents] = useState(0);
-  const [nbrGroups, setNbrGroups] = useState(0);
-  const [nbrPWs, setNbrPWs] = useState(0);
-  const [NbrTeeth, setNbrTeeth] = useState(0);
-  const [pws, setPWs] = useState([]);
-  const [groups, setGroups] = useState([]);
+  const [nbrStudents, setNbrStudents] = useState(null);
+  const [nbrGroups, setNbrGroups] = useState(null);
+  const [nbrPWs, setNbrPWs] = useState(null);
+  const [NbrTeeth, setNbrTeeth] = useState(null);
+  const [pws, setPWs] = useState(null);
+  const [groups, setGroups] = useState(null);
 
   useEffect(() => {
     const allProgress = document.querySelectorAll("main .card .progress");
@@ -64,7 +64,10 @@ const Dashboard = ({ user }) => {
   return (
     <Container>
       <main>
-        {!nbrStudents || !nbrGroups || !nbrPWs || !NbrTeeth ? (
+        {nbrStudents === null ||
+        nbrGroups === null ||
+        nbrPWs === null ||
+        NbrTeeth === null ? (
           <div>
             <ProgressSpinner />
           </div>
@@ -86,7 +89,7 @@ const Dashboard = ({ user }) => {
               <div className="card">
                 <div className="head">
                   <div>
-                    <i class="fa-solid fa-user-doctor fa-2xl"></i>
+                    <i className="fa-solid fa-user-doctor fa-2xl"></i>
                     <p>Nombre d'étudiants</p>
                     <h2>{nbrStudents}</h2>
                   </div>
@@ -95,7 +98,7 @@ const Dashboard = ({ user }) => {
               <div className="card">
                 <div className="head">
                   <div>
-                    <i class="bx bxs-group bx-md"></i>
+                    <i className="bx bxs-group bx-md"></i>
                     <p>Nombre de groupes</p>
                     <h2>{nbrGroups}</h2>
                   </div>
@@ -104,7 +107,7 @@ const Dashboard = ({ user }) => {
               <div className="card">
                 <div className="head">
                   <div>
-                    <i class="fas fa-tooth fa-2xl"></i>
+                    <i className="fas fa-tooth fa-2xl"></i>
                     <p>Nombre de dents</p>
                     <h2>{NbrTeeth}</h2>
                   </div>
@@ -113,14 +116,14 @@ const Dashboard = ({ user }) => {
               <div className="card">
                 <div className="head">
                   <div>
-                    <i class="fa-solid fa-syringe fa-2xl"></i>
+                    <i className="fa-solid fa-syringe fa-2xl"></i>
                     <p>Nombre de TPs</p>
                     <h2>{nbrPWs}</h2>
                   </div>
                 </div>
               </div>
             </div>
-            {nbrGroups && NbrTeeth && nbrPWs ? (
+            {pws !== null && groups !== null ? (
               <div className="data">
                 <div className="content-data">
                   <div className="head">
@@ -145,7 +148,7 @@ const Dashboard = ({ user }) => {
               </div>
             ) : (
               <div className="data"></div>
-            )}{" "}
+            )}
           </>
         )}
       </main>
