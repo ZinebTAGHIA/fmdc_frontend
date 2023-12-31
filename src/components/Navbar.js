@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../logos/logo-ensaj.png";
+import logo from "../logos/fmdc_logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 

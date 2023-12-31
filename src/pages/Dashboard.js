@@ -6,21 +6,7 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import axios from "../api/axios";
 import styled from "styled-components";
 
-const Container = styled.div`
-  .p-progressbar-label {
-    display: none !important;
-  }
-
-  .p-progressbar .p-progressbar-value {
-    background-color: #1775f1 !important;
-  }
-
-  .p-progressbar {
-    background-color: #f1f0f6 !important;
-    border-radius: 10px !important;
-    height: 15px !important;
-  }
-`;
+const Container = styled.div``;
 
 const Dashboard = ({ user }) => {
   const [nbrStudents, setNbrStudents] = useState(null);

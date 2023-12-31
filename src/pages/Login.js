@@ -1,11 +1,30 @@
 import React, { useEffect, useState } from "react";
-import logo from "../logos/logo-ensaj.png";
+import logo from "../logos/fmdc_logo.png";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "../api/axios";
+import background from "./styles/background/background.png";
+
+const Body = styled.body`
+  background-image: url(${background});
+  background-size: cover;
+  position: relative;
+  background-repeat: repeat-y;
+  z-index: 1;
+  overflow: hidden;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Opacité sombre */
+    z-index: -1;
+  }
+`;
 
 const Container = styled.div`
-  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
   * {
     margin: 0;
     padding: 0;
@@ -29,8 +48,7 @@ const Container = styled.div`
     box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.1);
   }
   .wrapper .title {
-    height: 90px;
-    /* background: #16a085; */
+    height: 150px;
     border-radius: 5px 5px 0 0;
     color: #000;
     font-size: 30px;
@@ -38,6 +56,9 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  .title img {
+    height: 140px;
   }
   .wrapper form {
     padding: 30px 25px 25px 25px;
@@ -153,45 +174,47 @@ const Login = ({ setUser }) => {
   };
 
   return (
-    <Container>
-      <div className="container">
-        <div className="wrapper">
-          <div className="title">
-            <img src={logo}></img>
-          </div>
-          <form className="form" onSubmit={handleSubmit}>
-            <div className="row">
-              <i className="bx bxs-user" />
-              <input
-                type="text"
-                placeholder="Identifiant"
-                id="login"
-                value={login}
-                onChange={(e) => setLogin(e.target.value)}
-                required
-              />
+    <Body>
+      <Container>
+        <div className="container">
+          <div className="wrapper">
+            <div className="title">
+              <img src={logo}></img>
             </div>
-            <div className="row">
-              <i className="bx bxs-lock-alt"></i>
-              <input
-                type="password"
-                placeholder="Mot de passe"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                id="password"
-                required
-              />
-            </div>
-            <span style={{ color: "red" }}>{accountErrors}</span>
-            <div className="btn-pass">
-              <div className="row button">
-                <input type="submit" value="Connexion" />
+            <form className="form" onSubmit={handleSubmit}>
+              <div className="row">
+                <i className="bx bxs-user" />
+                <input
+                  type="text"
+                  placeholder="Identifiant"
+                  id="login"
+                  value={login}
+                  onChange={(e) => setLogin(e.target.value)}
+                  required
+                />
               </div>
-            </div>
-          </form>
+              <div className="row">
+                <i className="bx bxs-lock-alt"></i>
+                <input
+                  type="password"
+                  placeholder="Mot de passe"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  id="password"
+                  required
+                />
+              </div>
+              <span style={{ color: "red" }}>{accountErrors}</span>
+              <div className="btn-pass">
+                <div className="row button">
+                  <input type="submit" value="Connexion" />
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </Body>
   );
 };
 
