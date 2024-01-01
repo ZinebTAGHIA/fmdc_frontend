@@ -97,7 +97,6 @@ const ListeEtudiants = () => {
                       number: currentStudent ? currentStudent.number : "",
                       userName: currentStudent ? currentStudent.userName : "",
                       groups: "",
-                      image: currentStudent ? currentStudent.image : "",
                       password: currentStudent ? currentStudent.password : "",
                     }}
                     validate={validate}
@@ -232,31 +231,6 @@ const ListeEtudiants = () => {
                                   })}
                                 >
                                   Username*
-                                </label>
-                              </span>
-                              {getFormErrorMessage(meta)}
-                            </div>
-                          )}
-                        />
-                        <Field
-                          name="image"
-                          render={({ input, meta }) => (
-                            <div className="field">
-                              <span className="p-float-label">
-                                <InputText
-                                  id="image"
-                                  {...input}
-                                  className={classNames({
-                                    "p-invalid": isFormFieldValid(meta),
-                                  })}
-                                />
-                                <label
-                                  htmlFor="image"
-                                  className={classNames({
-                                    "p-error": isFormFieldValid(meta),
-                                  })}
-                                >
-                                  Image
                                 </label>
                               </span>
                               {getFormErrorMessage(meta)}
@@ -404,7 +378,6 @@ const ListeEtudiants = () => {
             return { id: id };
           }),
           userName: data.userName,
-          image: data.image,
           password: data.password,
         })
         .then((response) => {
@@ -447,9 +420,6 @@ const ListeEtudiants = () => {
 
     if (!data.groups || data.groups.length === 0) {
       errors.groups = "Groupes est obligatoire.";
-    }
-    if (!data.image) {
-      errors.image = "image est obligatoire.";
     }
     return errors;
   };
