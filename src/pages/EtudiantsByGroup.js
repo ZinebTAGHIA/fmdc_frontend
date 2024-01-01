@@ -21,6 +21,7 @@ const EtudiantsByGroup = () => {
     global: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
   });
   const [expandedRows, setExpandedRows] = useState(null);
+  const [studentImages, setStudentImages] = useState({});
 
   useEffect(() => {
     axios
@@ -43,6 +44,36 @@ const EtudiantsByGroup = () => {
         .catch((error) => console.error(error));
     }
   }, [selectGroup]);
+
+  useEffect(() => {
+    const fetchStudentImages = async (students) => {
+      const imageUrls = {};
+      for (const student of students) {
+        try {
+          const response = await axios.get(
+            `/api/students/student/${student.id}/image`,
+            {
+              responseType: "arraybuffer",
+            }
+          );
+          const blob = new Blob([response.data], { type: "image/jpeg" });
+          const imageUrl = URL.createObjectURL(blob);
+          imageUrls[student.id] = imageUrl;
+        } catch (error) {
+          imageUrls[student.id] = null;
+          console.error(
+            `Error fetching image for student ID ${student.id}:`,
+            error
+          );
+        }
+      }
+      setStudentImages(imageUrls);
+    };
+
+    if (data && data.length > 0) {
+      fetchStudentImages(data);
+    }
+  }, [data]);
 
   const onGlobalFilterChange = (event) => {
     const value = event.target.value;
@@ -70,15 +101,18 @@ const EtudiantsByGroup = () => {
   };
 
   const studentBodyTemplate = (rowData) => {
+    const studentImg = studentImages[rowData.id];
+
     return (
       <div className="flex align-items-center gap-2">
         <img
           src={
-            rowData.image
-              ? rowData.image
+            studentImg !== null
+              ? studentImg
               : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
           }
           width={32}
+          alt={`Student ${rowData.id} photo`}
         />
       </div>
     );
