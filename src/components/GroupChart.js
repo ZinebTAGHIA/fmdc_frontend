@@ -65,6 +65,7 @@ class GroupChart extends React.Component {
       .then((responseData) => {
         const seriesData = [
           {
+            name: "groupes",
             data: responseData.filter(Boolean),
           },
         ];

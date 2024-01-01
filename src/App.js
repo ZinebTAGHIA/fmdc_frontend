@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import Profil from "./pages/Profil";
 import axios from "./api/axios";
+import EtudiantsByGroup from "./pages/EtudiantsByGroup";
 
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
@@ -60,6 +61,7 @@ function App() {
             <Route path="groups-list" element={<ListeGroupes />} />
             <Route path="add-etud" element={<AddEtudiant />} />
             <Route path="etuds-list" element={<ListeEtudiants />} />
+            <Route path="etuds-by-group" element={<EtudiantsByGroup />} />
             <Route path="add-tooth" element={<AddTooth />} />
             <Route path="teeth-list" element={<ListeTeeth />} />
             <Route path="add-pw" element={<AddPW />} />

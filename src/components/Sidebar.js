@@ -134,6 +134,15 @@ const Sidebar = (props) => {
                 Liste des étudiants
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/etuds-by-group"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                <i className="bx bx-search icon" />
+                Etudiants par groupe
+              </NavLink>
+            </li>
             <li className="divider" data-text="Dents">
               {props.isSidebarHiden ? "-" : "Dents"}
             </li>
