@@ -12,6 +12,8 @@ import { Dropdown } from "primereact/dropdown";
 import "./styles/list.css";
 import { Panel } from "primereact/panel";
 import StudentTPsChart from "../components/StudentTPsChart";
+import RowExpansionContent from "../components/RowExpansionContent";
+import { Dialog } from "primereact/dialog";
 
 const EtudiantsByGroup = () => {
   const [data, setData] = useState();
@@ -22,6 +24,17 @@ const EtudiantsByGroup = () => {
   });
   const [expandedRows, setExpandedRows] = useState(null);
   const [studentImages, setStudentImages] = useState({});
+  const [displayDialog, setDisplayDialog] = useState(false);
+  const [selectedPWImages, setSelectedPWImages] = useState(null);
+
+  const showDialog = (imagesData) => {
+    setSelectedPWImages(imagesData);
+    setDisplayDialog(true);
+  };
+
+  const onHide = () => {
+    setDisplayDialog(false);
+  };
 
   useEffect(() => {
     axios
@@ -124,9 +137,24 @@ const EtudiantsByGroup = () => {
 
   const rowExpansionTemplate = (data) => {
     return (
-      <div>
-        <StudentTPsChart />
-      </div>
+      <>
+        <RowExpansionContent studentId={data.id} showDialog={showDialog} />
+        <Dialog visible={displayDialog} onHide={onHide}>
+          <h3>ID: {/* Display selectedPWImages.pwId here */}</h3>
+          {selectedPWImages && (
+            <>
+              <img
+                src={`data:image/jpeg;base64,${selectedPWImages.imageFront}`}
+                alt="Image Front"
+              />
+              <img
+                src={`data:image/jpeg;base64,${selectedPWImages.imageSide}`}
+                alt="Image Side"
+              />
+            </>
+          )}
+        </Dialog>
+      </>
     );
   };
 

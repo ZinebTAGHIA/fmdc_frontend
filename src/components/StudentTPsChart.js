@@ -1,28 +1,65 @@
 import React, { Component } from "react";
 import ReactApexChart from "react-apexcharts";
+
 class StudentTPsChart extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       options: {
-        // chart: {
-        //   id: "basic-bar",
-        // },
         xaxis: {
-          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
+          categories: [],
         },
       },
       series: [
         {
-          name: "series-1",
-          data: [30, 40, 45, 50, 49, 60, 70, 91],
+          name: "note",
+          data: [],
         },
       ],
     };
   }
 
+  componentDidMount() {
+    this.updateChartData();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.pws !== this.props.pws) {
+      this.updateChartData();
+    }
+  }
+
+  updateChartData = () => {
+    const { pws } = this.props;
+    if (pws && pws.length > 0) {
+      const categories = pws.map((pw) => pw.pw.title);
+      const data = pws.map((pw) => (pw.noteFront + pw.noteSide) / 2);
+
+      this.setState({
+        options: {
+          ...this.state.options,
+          xaxis: {
+            categories,
+          },
+        },
+        series: [
+          {
+            ...this.state.series[0],
+            data,
+          },
+        ],
+      });
+    }
+  };
+
   render() {
+    const { pws } = this.props;
+
+    if (!pws || pws.length === 0) {
+      return <div>No data available for this student</div>;
+    }
+
     return (
       <div className="app">
         <div className="row">
@@ -31,7 +68,7 @@ class StudentTPsChart extends Component {
               options={this.state.options}
               series={this.state.series}
               type="line"
-              width="500"
+              width={500}
             />
           </div>
         </div>
