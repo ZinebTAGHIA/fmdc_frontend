@@ -13,20 +13,21 @@ import "./styles/form.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 
-const AddGroup = () => {
+const AddGroup = (props) => {
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
-  const [professors, setProfessors] = useState([]);
+  const [professor, setProfessor] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(`/api/professors`)
-      .then((response) => {
-        setProfessors(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+    if (props.user && props.user.id) {
+      axios
+        .get(`/api/professors/${props.user.id}`)
+        .then((response) => {
+          setProfessor(response.data);
+        })
+        .catch((error) => console.error(error));
+    }
+  }, [props.user]);
 
   const validate = (data) => {
     let errors = {};
@@ -43,7 +44,6 @@ const AddGroup = () => {
   };
 
   const onSubmit = (data, form) => {
-    console.log(data);
     setFormData(data);
     if (data) {
       axios
@@ -54,12 +54,8 @@ const AddGroup = () => {
             id: data.professor,
           },
         })
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+        .then((response) => {})
+        .catch((error) => {});
       setShowMessage(true);
     }
     form.restart();
@@ -192,15 +188,15 @@ const AddGroup = () => {
                                   className={classNames({
                                     "p-invalid": isFormFieldValid(meta),
                                   })}
-                                  options={professors.map((professor) => {
-                                    return {
+                                  options={[
+                                    {
                                       label:
                                         professor.lastName +
                                         " " +
                                         professor.firstName,
                                       value: professor.id,
-                                    };
-                                  })}
+                                    },
+                                  ]}
                                 />
                                 <label
                                   htmlFor="professor"

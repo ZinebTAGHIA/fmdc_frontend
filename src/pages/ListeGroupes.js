@@ -18,11 +18,11 @@ import { classNames } from "primereact/utils";
 import { ProgressSpinner } from "primereact/progressspinner";
 import "./styles/list.css";
 
-const ListeGroupes = () => {
+const ListeGroupes = (props) => {
   const [data, setData] = useState();
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
-  const [professors, setProfessors] = useState([]);
+  const [professor, setProfessor] = useState({});
   const [currentGroup, setCurrentGroup] = useState({});
 
   const [filters, setFilters] = useState({
@@ -31,26 +31,27 @@ const ListeGroupes = () => {
   const toast = useRef(null);
 
   const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    if (props.user && props.user.id) {
+      axios
+        .get(`/api/professors/${props.user.id}`)
+        .then((response) => {
+          setProfessor(response.data);
+        })
+        .catch((error) => {});
+    }
+  }, [props.user]);
 
   useEffect(() => {
-    axios
-      .get(`/api/professors`)
-      .then((response) => {
-        setProfessors(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => console.error(error));
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get(`/api/groups`)
-      .then((response) => {
-        setData(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+    if (props.user && props.user.id) {
+      axios
+        .get(`/api/professors/professor/${props.user.id}/groups`)
+        .then((response) => {
+          setData(response.data);
+        })
+        .catch((error) => {});
+    }
+  }, [props.user]);
 
   const getSeverity = () => {
     return "info";
@@ -146,15 +147,15 @@ const ListeGroupes = () => {
                                   className={classNames({
                                     "p-invalid": isFormFieldValid(meta),
                                   })}
-                                  options={professors.map((professor) => {
-                                    return {
+                                  options={[
+                                    {
                                       label:
                                         professor.lastName +
                                         " " +
                                         professor.firstName,
                                       value: professor.id,
-                                    };
-                                  })}
+                                    },
+                                  ]}
                                 />
                                 <label
                                   htmlFor="professor"
@@ -235,11 +236,12 @@ const ListeGroupes = () => {
     axios
       .delete(`/api/groups/${id}`)
       .then((response) => {
-        console.log(response.data);
         axios
-          .get(`/api/groups`)
-          .then((response) => setData(response.data))
-          .catch((error) => console.error(error));
+          .get(`/api/professors/professor/${props.user.id}/groups`)
+          .then((response) => {
+            setData(response.data);
+          })
+          .catch((error) => {});
         toast.current.show({
           severity: "success",
           summary: "Success",
@@ -248,7 +250,6 @@ const ListeGroupes = () => {
         });
       })
       .catch((error) => {
-        console.error(error);
         toast.current.show({
           severity: "error",
           summary: "Erreur",
@@ -279,7 +280,6 @@ const ListeGroupes = () => {
   };
 
   const onSubmit = (data, form) => {
-    console.log(data);
     setFormData(data);
     if (data) {
       axios
@@ -291,18 +291,14 @@ const ListeGroupes = () => {
           },
         })
         .then((response) => {
-          console.log(response);
           axios
-            .get(`/api/groups`)
+            .get(`/api/professors/professor/${props.user.id}/groups`)
             .then((response) => {
               setData(response.data);
-              console.log(response.data);
             })
-            .catch((error) => console.error(error));
+            .catch((error) => {});
         })
-        .catch((error) => {
-          console.error(error);
-        });
+        .catch((error) => {});
     }
     setVisible(false);
     setShowMessage(true);

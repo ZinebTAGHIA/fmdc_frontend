@@ -35,9 +35,8 @@ const ListProfesseurs = () => {
       .get(`/api/professors`)
       .then((response) => {
         setData(response.data);
-        console.log(response.data);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {});
   }, []);
 
   const operationsBodyTemplate = (rowData) => {
@@ -210,11 +209,10 @@ const ListProfesseurs = () => {
     axios
       .delete(`/api/professors/${id}`)
       .then((response) => {
-        console.log(response.data);
         axios
           .get(`/api/professors`)
           .then((response) => setData(response.data))
-          .catch((error) => console.error(error));
+          .catch((error) => {});
         toast.current.show({
           severity: "success",
           summary: "Success",
@@ -223,7 +221,6 @@ const ListProfesseurs = () => {
         });
       })
       .catch((error) => {
-        console.error(error);
         toast.current.show({
           severity: "error",
           summary: "Erreur",
@@ -255,8 +252,6 @@ const ListProfesseurs = () => {
 
   const onSubmit = (data) => {
     setFormData(data);
-    console.log(data);
-    console.log(currentProf);
     axios
       .put(`/api/professors/${currentProf.id}`, {
         userName: currentProf.userName,
@@ -267,15 +262,12 @@ const ListProfesseurs = () => {
         image: currentProf.image,
       })
       .then((response) => {
-        console.log(response);
         axios
           .get(`/api/professors`)
           .then((response) => setData(response.data))
-          .catch((error) => console.error(error));
+          .catch((error) => {});
       })
-      .catch((error) => {
-        console.error(error);
-      });
+      .catch((error) => {});
     setVisible(false);
     setShowMessage(true);
   };

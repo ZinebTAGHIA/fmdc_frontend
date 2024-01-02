@@ -15,7 +15,7 @@ import "primereact/resources/primereact.min.css";
 import { Password } from "primereact/password";
 import { MultiSelect } from "primereact/multiselect";
 
-const AddPW = () => {
+const AddPW = (props) => {
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
   const [teeth, setTeeth] = useState([]);
@@ -27,20 +27,20 @@ const AddPW = () => {
       .get(`/api/teeth`)
       .then((response) => {
         setTeeth(response.data);
-        console.log(response.data);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {});
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`/api/groups`)
-      .then((response) => {
-        setGroups(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+    if (props.user && props.user.id) {
+      axios
+        .get(`/api/professors/professor/${props.user.id}/groups`)
+        .then((response) => {
+          setGroups(response.data);
+        })
+        .catch((error) => {});
+    }
+  }, [props.user]);
 
   const validate = (data) => {
     let errors = {};
@@ -62,7 +62,6 @@ const AddPW = () => {
   };
 
   const onSubmit = (data, form) => {
-    console.log(data);
     data.groups = selectGroups;
     setFormData(data);
     if (data) {
@@ -77,12 +76,8 @@ const AddPW = () => {
             return { id: id };
           }),
         })
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+        .then((response) => {})
+        .catch((error) => {});
       setShowMessage(true);
     }
     setSelectGoups([]);

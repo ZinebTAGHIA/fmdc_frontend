@@ -17,9 +17,7 @@ const StudentChart = (props) => {
         const data = responses.map((response) => response.data);
 
         setSeries(data);
-      } catch (error) {
-        console.error(error);
-      }
+      } catch (error) {}
     };
 
     fetchData();

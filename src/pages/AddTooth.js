@@ -32,12 +32,8 @@ const AddTooth = () => {
         .post(`/api/teeth`, {
           name: data.name,
         })
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+        .then((response) => {})
+        .catch((error) => {});
       setShowMessage(true);
     }
     form.restart();

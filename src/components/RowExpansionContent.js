@@ -13,10 +13,7 @@ const RowExpansionContent = ({ studentId, showDialog }) => {
           `/api/students/studentpws/${studentId}`
         );
         setPws(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error(error);
-      }
+      } catch (error) {}
     };
 
     fetchData();
@@ -29,9 +26,7 @@ const RowExpansionContent = ({ studentId, showDialog }) => {
       );
       const imagesData = response.data;
       showDialog(imagesData);
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   };
 
   const onPWClickHandle = (pwId) => {

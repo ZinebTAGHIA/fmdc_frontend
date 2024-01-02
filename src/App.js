@@ -57,15 +57,18 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="add-prof" element={<AddProfessor />} />
             <Route path="professors-list" element={<ListProfesseurs />} />
-            <Route path="add-group" element={<AddGroup />} />
-            <Route path="groups-list" element={<ListeGroupes />} />
-            <Route path="add-etud" element={<AddEtudiant />} />
-            <Route path="etuds-list" element={<ListeEtudiants />} />
-            <Route path="etuds-by-group" element={<EtudiantsByGroup />} />
+            <Route path="add-group" element={<AddGroup user={user} />} />
+            <Route path="groups-list" element={<ListeGroupes user={user} />} />
+            <Route path="add-etud" element={<AddEtudiant user={user} />} />
+            <Route path="etuds-list" element={<ListeEtudiants user={user} />} />
+            <Route
+              path="etuds-by-group"
+              element={<EtudiantsByGroup user={user} />}
+            />
             <Route path="add-tooth" element={<AddTooth />} />
             <Route path="teeth-list" element={<ListeTeeth />} />
-            <Route path="add-pw" element={<AddPW />} />
-            <Route path="pws-list" element={<ListePWs />} />
+            <Route path="add-pw" element={<AddPW user={user} />} />
+            <Route path="pws-list" element={<ListePWs user={user} />} />
             <Route
               path="profil"
               element={

@@ -50,7 +50,6 @@ const AddProfessor = () => {
   };
 
   const onSubmit = (data, form) => {
-    console.log(data);
     setFormData(data);
     if (data) {
       axios
@@ -64,12 +63,10 @@ const AddProfessor = () => {
           grade: data.grade,
         })
         .then((response) => {
-          console.log(response);
           setShowMessage(true);
           form.restart();
         })
         .catch((error) => {
-          console.error(error);
           toast.current.show({
             severity: "error",
             summary: "Erreur",

@@ -15,7 +15,7 @@ import StudentTPsChart from "../components/StudentTPsChart";
 import RowExpansionContent from "../components/RowExpansionContent";
 import { Dialog } from "primereact/dialog";
 
-const EtudiantsByGroup = () => {
+const EtudiantsByGroup = (props) => {
   const [data, setData] = useState();
   const [groups, setGroups] = useState([]);
   const [selectGroup, setSelectGroup] = useState("");
@@ -37,14 +37,15 @@ const EtudiantsByGroup = () => {
   };
 
   useEffect(() => {
-    axios
-      .get(`/api/groups`)
-      .then((response) => {
-        setGroups(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+    if (props.user && props.user.id) {
+      axios
+        .get(`/api/professors/professor/${props.user.id}/groups`)
+        .then((response) => {
+          setGroups(response.data);
+        })
+        .catch((error) => {});
+    }
+  }, [props.user]);
 
   useEffect(() => {
     if (selectGroup) {
@@ -52,9 +53,8 @@ const EtudiantsByGroup = () => {
         .get(`/api/groups/students/${selectGroup}`)
         .then((response) => {
           setData(response.data);
-          console.log(response.data);
         })
-        .catch((error) => console.error(error));
+        .catch((error) => {});
     }
   }, [selectGroup]);
 
@@ -74,10 +74,6 @@ const EtudiantsByGroup = () => {
           imageUrls[student.id] = imageUrl;
         } catch (error) {
           imageUrls[student.id] = null;
-          console.error(
-            `Error fetching image for student ID ${student.id}:`,
-            error
-          );
         }
       }
       setStudentImages(imageUrls);

@@ -144,8 +144,8 @@ const Profil = (props) => {
       .then((response) => {
         setData(response.data);
       })
-      .catch((error) => console.error(error));
-  }, []);
+      .catch((error) => {});
+  }, [props.user.id]);
   const onModifierClick = () => {
     const inputs = document.querySelectorAll(".text-base");
     inputs.forEach((input) => {
@@ -167,11 +167,10 @@ const Profil = (props) => {
         password: newData.password,
       })
       .then((response) => {
-        console.log(response);
         axios
           .get(`/api/professors/${props.user.id}`)
           .then((response) => setData(response.data))
-          .catch((error) => console.error(error));
+          .catch((error) => {});
         toast.current.show({
           severity: "success",
           summary: "Success",
@@ -180,7 +179,6 @@ const Profil = (props) => {
         });
       })
       .catch((error) => {
-        console.error(error);
         toast.current.show({
           severity: "error",
           summary: "Erreur",
@@ -245,7 +243,6 @@ const Profil = (props) => {
         }
       )
       .then((response) => {
-        console.log(response);
         axios
           .get(`/api/professors/${props.user.id}`)
           .then((response) => {
@@ -264,11 +261,9 @@ const Profil = (props) => {
                 console.error("Error fetching image:", error);
               });
           })
-          .catch((error) => console.error(error));
+          .catch((error) => {});
       })
-      .catch((error) => {
-        console.error(error);
-      });
+      .catch((error) => {});
   };
   const handleSubmit = async (e) => {
     e.preventDefault();

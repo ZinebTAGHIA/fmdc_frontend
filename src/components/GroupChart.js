@@ -12,9 +12,7 @@ class GroupChart extends React.Component {
           height: 350,
           type: "bar",
           events: {
-            click: function (chart, w, e) {
-              // console.log(chart, w, e)
-            },
+            click: function (chart, w, e) {},
           },
           toolbar: {
             show: true,
@@ -56,7 +54,6 @@ class GroupChart extends React.Component {
         .get(`/api/pws/nbrGroup/${pw.id}`)
         .then((response) => response.data)
         .catch((error) => {
-          console.error(error);
           return null;
         })
     );
@@ -72,9 +69,7 @@ class GroupChart extends React.Component {
 
         this.setState({ series: seriesData });
       })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+      .catch((error) => {});
   };
   render() {
     const { options, series } = this.state;

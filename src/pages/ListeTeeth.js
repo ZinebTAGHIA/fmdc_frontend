@@ -35,9 +35,8 @@ const ListeTeeth = () => {
       .get(`/api/teeth`)
       .then((response) => {
         setData(response.data);
-        console.log(response.data);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {});
   }, []);
 
   const getSeverity = () => {
@@ -160,11 +159,10 @@ const ListeTeeth = () => {
     axios
       .delete(`/api/teeth/${id}`)
       .then((response) => {
-        console.log(response.data);
         axios
           .get(`/api/teeth`)
           .then((response) => setData(response.data))
-          .catch((error) => console.error(error));
+          .catch((error) => {});
         toast.current.show({
           severity: "success",
           summary: "Success",
@@ -179,7 +177,6 @@ const ListeTeeth = () => {
           detail: "Cette dent ne peut pas être supprimée !",
           life: 3000,
         });
-        console.error(error);
       });
   };
 
@@ -205,21 +202,17 @@ const ListeTeeth = () => {
 
   const onSubmit = (data) => {
     setFormData(data);
-    console.log(data);
     axios
       .put(`/api/teeth/${currentTooth.id}`, {
         name: data.name,
       })
       .then((response) => {
-        console.log(response);
         axios
           .get(`/api/teeth`)
           .then((response) => setData(response.data))
-          .catch((error) => console.error(error));
+          .catch((error) => {});
       })
-      .catch((error) => {
-        console.error(error);
-      });
+      .catch((error) => {});
     setVisible(false);
     setShowMessage(true);
   };

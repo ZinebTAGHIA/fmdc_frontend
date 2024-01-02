@@ -16,7 +16,7 @@ import { Password } from "primereact/password";
 import { MultiSelect } from "primereact/multiselect";
 import { Toast } from "primereact/toast";
 
-const AddEtudiant = () => {
+const AddEtudiant = (props) => {
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
   const [groups, setGroups] = useState([]);
@@ -24,14 +24,15 @@ const AddEtudiant = () => {
   const toast = useRef(null);
 
   useEffect(() => {
-    axios
-      .get(`/api/groups`)
-      .then((response) => {
-        setGroups(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+    if (props.user && props.user.id) {
+      axios
+        .get(`/api/professors/professor/${props.user.id}/groups`)
+        .then((response) => {
+          setGroups(response.data);
+        })
+        .catch((error) => {});
+    }
+  }, [props.user]);
 
   const validate = (data) => {
     let errors = {};
@@ -66,7 +67,6 @@ const AddEtudiant = () => {
   };
 
   const onSubmit = (data, form) => {
-    console.log(data);
     data.groups = selectGroups;
     setFormData(data);
     if (data) {
@@ -83,13 +83,11 @@ const AddEtudiant = () => {
           password: data.password,
         })
         .then((response) => {
-          console.log(response);
           setShowMessage(true);
           setSelectGroups([]);
           form.restart();
         })
         .catch((error) => {
-          console.error(error);
           toast.current.show({
             severity: "error",
             summary: "Erreur",

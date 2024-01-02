@@ -158,7 +158,6 @@ const Login = ({ setUser }) => {
             response.data.role !== "ADMIN" &&
             response.data.role !== "PROFESSOR"
           ) {
-            console.log(response.data);
             setAccountErrors(
               "Vous n'êtes pas autorisé à accéder à cette plateforme."
             );
@@ -192,7 +191,6 @@ const Login = ({ setUser }) => {
       })
       .then((response) => {
         if (response.status === 200) {
-          console.log(response.data);
           setForgotPwd(false);
           setTokenFormView(true);
           setAccountErrors("");
@@ -218,7 +216,6 @@ const Login = ({ setUser }) => {
       })
       .then((response) => {
         if (response.status === 200) {
-          console.log(response.data);
           setTokenFormView(false);
           setResetFormView(true);
           setAccountErrors("");
@@ -258,7 +255,6 @@ const Login = ({ setUser }) => {
       })
       .then((response) => {
         if (response.status === 200) {
-          console.log(response.data);
           setResetFormView(false);
           setLoginFormView(true);
           setAccountErrors("");

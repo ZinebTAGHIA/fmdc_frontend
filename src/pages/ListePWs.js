@@ -21,7 +21,7 @@ import { Password } from "primereact/password";
 import { MultiSelect } from "primereact/multiselect";
 import { Tag } from "primereact/tag";
 
-const ListePWs = () => {
+const ListePWs = (props) => {
   const [data, setData] = useState();
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
@@ -48,30 +48,31 @@ const ListePWs = () => {
       .get(`/api/teeth`)
       .then((response) => {
         setTeeth(response.data);
-        console.log(response.data);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {});
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`/api/groups`)
-      .then((response) => {
-        setGroups(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+    if (props.user && props.user.id) {
+      axios
+        .get(`/api/professors/professor/${props.user.id}/groups`)
+        .then((response) => {
+          setGroups(response.data);
+        })
+        .catch((error) => {});
+    }
+  }, [props.user]);
 
   useEffect(() => {
-    axios
-      .get(`/api/pws`)
-      .then((response) => {
-        setData(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+    if (props.user && props.user.id) {
+      axios
+        .get(`/api/professors/professor/${props.user.id}/pws`)
+        .then((response) => {
+          setData(response.data);
+        })
+        .catch((error) => {});
+    }
+  }, [props.user]);
 
   const getSeverity = () => {
     return "info";
@@ -290,11 +291,12 @@ const ListePWs = () => {
     axios
       .delete(`/api/pws/${id}`)
       .then((response) => {
-        console.log(response.data);
         axios
-          .get(`/api/pws`)
-          .then((response) => setData(response.data))
-          .catch((error) => console.error(error));
+          .get(`/api/professors/professor/${props.user.id}/pws`)
+          .then((response) => {
+            setData(response.data);
+          })
+          .catch((error) => {});
         toast.current.show({
           severity: "success",
           summary: "Success",
@@ -303,7 +305,6 @@ const ListePWs = () => {
         });
       })
       .catch((error) => {
-        console.error(error);
         toast.current.show({
           severity: "error",
           summary: "Erreur",
@@ -334,7 +335,6 @@ const ListePWs = () => {
   };
 
   const onSubmit = (data, form) => {
-    console.log(data);
     data.groups = selectGroups;
     setFormData(data);
     if (data) {
@@ -350,18 +350,14 @@ const ListePWs = () => {
           }),
         })
         .then((response) => {
-          console.log(response);
           axios
-            .get(`/api/pws`)
+            .get(`/api/professors/professor/${props.user.id}/pws`)
             .then((response) => {
               setData(response.data);
-              console.log(response.data);
             })
-            .catch((error) => console.error(error));
+            .catch((error) => {});
         })
-        .catch((error) => {
-          console.error(error);
-        });
+        .catch((error) => {});
     }
     setSelectGoups([]);
     setVisible(false);

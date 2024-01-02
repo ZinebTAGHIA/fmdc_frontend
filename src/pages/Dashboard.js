@@ -22,25 +22,25 @@ const Dashboard = ({ user }) => {
     axios
       .get(`/api/students`)
       .then((response) => setNbrStudents(response.data.length))
-      .catch((error) => console.error(error));
+      .catch((error) => {});
     axios
       .get(`/api/groups`)
       .then((response) => {
         setNbrGroups(response.data.length);
         setGroups(response.data);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {});
     axios
       .get(`/api/pws`)
       .then((response) => {
         setNbrPWs(response.data.length);
         setPWs(response.data);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {});
     axios
       .get(`/api/teeth`)
       .then((response) => setNbrTeeth(response.data.length))
-      .catch((error) => console.error(error));
+      .catch((error) => {});
 
     allProgress.forEach((item) => {
       item.style.setProperty("--value", item.dataset.value);

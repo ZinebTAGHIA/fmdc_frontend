@@ -19,7 +19,7 @@ import "./styles/list.css";
 import { MultiSelect } from "primereact/multiselect";
 import { Tag } from "primereact/tag";
 
-const ListeEtudiants = () => {
+const ListeEtudiants = (props) => {
   const [data, setData] = useState();
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
@@ -43,24 +43,26 @@ const ListeEtudiants = () => {
   }, [currentStudent]);
 
   useEffect(() => {
-    axios
-      .get(`/api/groups`)
-      .then((response) => {
-        setGroups(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+    if (props.user && props.user.id) {
+      axios
+        .get(`/api/professors/professor/${props.user.id}/groups`)
+        .then((response) => {
+          setGroups(response.data);
+        })
+        .catch((error) => {});
+    }
+  }, [props.user]);
 
   useEffect(() => {
-    axios
-      .get(`/api/students`)
-      .then((response) => {
-        setData(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+    if (props.user && props.user.id) {
+      axios
+        .get(`/api/professors/professor/${props.user.id}/students`)
+        .then((response) => {
+          setData(response.data);
+        })
+        .catch((error) => {});
+    }
+  }, [props.user]);
 
   const getSeverity = () => {
     return "info";
@@ -272,11 +274,12 @@ const ListeEtudiants = () => {
     axios
       .delete(`/api/students/${id}`)
       .then((response) => {
-        console.log(response.data);
         axios
-          .get(`/api/students`)
-          .then((response) => setData(response.data))
-          .catch((error) => console.error(error));
+          .get(`/api/professors/professor/${props.user.id}/students`)
+          .then((response) => {
+            setData(response.data);
+          })
+          .catch((error) => {});
 
         toast.current.show({
           severity: "success",
@@ -286,7 +289,6 @@ const ListeEtudiants = () => {
         });
       })
       .catch((error) => {
-        console.error(error);
         toast.current.show({
           severity: "error",
           summary: "Erreur",
@@ -317,7 +319,6 @@ const ListeEtudiants = () => {
   };
 
   const onSubmit = (data, form) => {
-    console.log(data);
     data.groups = selectGroups;
     setFormData(data);
     if (data) {
@@ -331,18 +332,14 @@ const ListeEtudiants = () => {
           }),
         })
         .then((response) => {
-          console.log(response);
           axios
-            .get(`/api/students`)
+            .get(`/api/professors/professor/${props.user.id}/students`)
             .then((response) => {
               setData(response.data);
-              console.log(response.data);
             })
-            .catch((error) => console.error(error));
+            .catch((error) => {});
         })
-        .catch((error) => {
-          console.error(error);
-        });
+        .catch((error) => {});
     }
     setSelectGroups([]);
     setVisible(false);
@@ -360,9 +357,6 @@ const ListeEtudiants = () => {
     }
     if (!data.number) {
       errors.number = "Numéro est obligatoire.";
-    }
-    if (!data.groups || data.groups.length === 0) {
-      errors.groups = "Groupes est obligatoire.";
     }
     return errors;
   };
