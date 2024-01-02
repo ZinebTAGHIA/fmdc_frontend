@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Form, Field } from "react-final-form";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -14,12 +14,14 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import { Password } from "primereact/password";
 import { MultiSelect } from "primereact/multiselect";
+import { Toast } from "primereact/toast";
 
 const AddEtudiant = () => {
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
   const [groups, setGroups] = useState([]);
   const [selectGroups, setSelectGroups] = useState([]);
+  const toast = useRef(null);
 
   useEffect(() => {
     axios
@@ -52,9 +54,14 @@ const AddEtudiant = () => {
     if (!data.groups || data.groups.length === 0) {
       errors.groups = "Groupes est obligatoire.";
     }
-    // if (!data.image) {
-    //   errors.image = "Image est obligatoire.";
-    // }
+    if (!data.email) {
+      errors.email = "Email est obligatoire.";
+    }
+    if (data.email) {
+      if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {
+        errors.email = "Adresse email invalide. E.g. example@email.com";
+      }
+    }
     return errors;
   };
 
@@ -71,20 +78,26 @@ const AddEtudiant = () => {
           groups: data.groups.map((id) => {
             return { id: id };
           }),
+          email: data.email,
           userName: data.userName,
-          image: data.image,
           password: data.password,
         })
         .then((response) => {
           console.log(response);
+          setShowMessage(true);
+          setSelectGroups([]);
+          form.restart();
         })
         .catch((error) => {
           console.error(error);
+          toast.current.show({
+            severity: "error",
+            summary: "Erreur",
+            detail: "Email ou Username déjà utilisé.",
+            life: 3000,
+          });
         });
-      setShowMessage(true);
     }
-    setSelectGroups([]);
-    form.restart();
   };
 
   const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
@@ -107,6 +120,7 @@ const AddEtudiant = () => {
   return (
     <div>
       <main>
+        <Toast ref={toast} />
         <h1 className="title"> Ajouter un étudiant </h1>
         <div style={{ marginBottom: 40 }}>
           <ul className="breadcrumbs">
@@ -149,8 +163,8 @@ const AddEtudiant = () => {
                       lastName: "",
                       firstName: "",
                       number: "",
+                      email: "",
                       userName: "",
-                      // image: "",
                       groups: "",
                       password: "",
                     }}
@@ -266,32 +280,32 @@ const AddEtudiant = () => {
                             </div>
                           )}
                         />
-                        {/* <Field
-                          name="image"
+                        <Field
+                          name="email"
                           render={({ input, meta }) => (
                             <div className="field">
                               <span className="p-float-label p-input-icon-right">
                                 <i className="pi pi-envelope" />
                                 <InputText
-                                  id="image"
+                                  id="email"
                                   {...input}
                                   className={classNames({
                                     "p-invalid": isFormFieldValid(meta),
                                   })}
                                 />
                                 <label
-                                  htmlFor="image"
+                                  htmlFor="email"
                                   className={classNames({
                                     "p-error": isFormFieldValid(meta),
                                   })}
                                 >
-                                  Image*
+                                  Email*
                                 </label>
                               </span>
                               {getFormErrorMessage(meta)}
                             </div>
                           )}
-                        /> */}
+                        />
                         <Field
                           name="userName"
                           render={({ input, meta }) => (

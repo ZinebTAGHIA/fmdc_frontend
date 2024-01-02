@@ -12,12 +12,10 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { Dropdown } from "primereact/dropdown";
 import { Field, Form } from "react-final-form";
 import { classNames } from "primereact/utils";
 import { ProgressSpinner } from "primereact/progressspinner";
 import "./styles/list.css";
-import { Password } from "primereact/password";
 import { MultiSelect } from "primereact/multiselect";
 import { Tag } from "primereact/tag";
 
@@ -25,7 +23,6 @@ const ListeEtudiants = () => {
   const [data, setData] = useState();
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
-  const [filieres, setFilieres] = useState([]);
   const [groups, setGroups] = useState([]);
   const [currentStudent, setCurrentStudent] = useState({});
   const [selectGroups, setSelectGroups] = useState([]);
@@ -95,9 +92,7 @@ const ListeEtudiants = () => {
                       lastName: currentStudent ? currentStudent.lastName : "",
                       firstName: currentStudent ? currentStudent.firstName : "",
                       number: currentStudent ? currentStudent.number : "",
-                      userName: currentStudent ? currentStudent.userName : "",
                       groups: "",
-                      password: currentStudent ? currentStudent.password : "",
                     }}
                     validate={validate}
                     render={({ handleSubmit }) => (
@@ -211,57 +206,6 @@ const ListeEtudiants = () => {
                             </div>
                           )}
                         />
-                        <Field
-                          name="userName"
-                          render={({ input, meta }) => (
-                            <div className="field">
-                              <span className="p-float-label p-input-icon-right">
-                                <i className="pi pi-envelope" />
-                                <InputText
-                                  id="userName"
-                                  {...input}
-                                  className={classNames({
-                                    "p-invalid": isFormFieldValid(meta),
-                                  })}
-                                />
-                                <label
-                                  htmlFor="userName"
-                                  className={classNames({
-                                    "p-error": isFormFieldValid(meta),
-                                  })}
-                                >
-                                  Username*
-                                </label>
-                              </span>
-                              {getFormErrorMessage(meta)}
-                            </div>
-                          )}
-                        />
-                        <Field
-                          name="password"
-                          render={({ input, meta }) => (
-                            <div className="field">
-                              <span className="p-float-label">
-                                <Password
-                                  id="password"
-                                  {...input}
-                                  className={classNames({
-                                    "p-invalid": isFormFieldValid(meta),
-                                  })}
-                                />
-                                <label
-                                  htmlFor="password"
-                                  className={classNames({
-                                    "p-error": isFormFieldValid(meta),
-                                  })}
-                                >
-                                  Password
-                                </label>
-                              </span>
-                              {getFormErrorMessage(meta)}
-                            </div>
-                          )}
-                        />
                         <Button
                           type="submit"
                           label="Enregistrer"
@@ -333,22 +277,30 @@ const ListeEtudiants = () => {
           .get(`/api/students`)
           .then((response) => setData(response.data))
           .catch((error) => console.error(error));
-      })
-      .catch((error) => console.error(error));
 
-    toast.current.show({
-      severity: "info",
-      summary: "Confirmé",
-      detail: "Vous avez accepté",
-      life: 3000,
-    });
+        toast.current.show({
+          severity: "success",
+          summary: "Success",
+          detail: "Etudiant supprimé.",
+          life: 3000,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.current.show({
+          severity: "error",
+          summary: "Erreur",
+          detail: "Cet étudiant ne peut pas être supprimé !",
+          life: 3000,
+        });
+      });
   };
 
   const reject = () => {
     toast.current.show({
       severity: "warn",
       summary: "Rejeté",
-      detail: "Vous avez refusé",
+      detail: "Suppression annulée.",
       life: 3000,
     });
   };
@@ -377,8 +329,6 @@ const ListeEtudiants = () => {
           groups: data.groups.map((id) => {
             return { id: id };
           }),
-          userName: data.userName,
-          password: data.password,
         })
         .then((response) => {
           console.log(response);
@@ -411,13 +361,6 @@ const ListeEtudiants = () => {
     if (!data.number) {
       errors.number = "Numéro est obligatoire.";
     }
-    if (!data.userName) {
-      errors.login = "Username est obligatoire.";
-    }
-    if (!data.password) {
-      errors.password = "Password est obligatoire.";
-    }
-
     if (!data.groups || data.groups.length === 0) {
       errors.groups = "Groupes est obligatoire.";
     }

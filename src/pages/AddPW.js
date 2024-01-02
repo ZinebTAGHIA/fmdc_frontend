@@ -51,9 +51,7 @@ const AddPW = () => {
     if (!data.objectif) {
       errors.objectif = "Objectif est obligatoire.";
     }
-    // if (!data.docs) {
-    //   errors.docs = "Docs est obligatoire.";
-    // }
+
     if (!data.tooth) {
       errors.tooth = "Dent est obligatoire.";
     }
@@ -72,7 +70,6 @@ const AddPW = () => {
         .post(`/api/pws`, {
           title: data.title,
           objectif: data.objectif,
-          docs: data.docs,
           tooth: {
             id: data.tooth,
           },
@@ -153,7 +150,6 @@ const AddPW = () => {
                     initialValues={{
                       title: "",
                       objectif: "",
-                      // docs: "",
                       tooth: "",
                       groups: "",
                     }}
@@ -211,31 +207,6 @@ const AddPW = () => {
                             </div>
                           )}
                         />
-                        {/* <Field
-                          name="docs"
-                          render={({ input, meta }) => (
-                            <div className="field">
-                              <span className="p-float-label">
-                                <InputText
-                                  id="docs"
-                                  {...input}
-                                  className={classNames({
-                                    "p-invalid": isFormFieldValid(meta),
-                                  })}
-                                />
-                                <label
-                                  htmlFor="docs"
-                                  className={classNames({
-                                    "p-error": isFormFieldValid(meta),
-                                  })}
-                                >
-                                  Docs*
-                                </label>
-                              </span>
-                              {getFormErrorMessage(meta)}
-                            </div>
-                          )}
-                        /> */}
                         <Field
                           name="tooth"
                           render={({ input, meta }) => (

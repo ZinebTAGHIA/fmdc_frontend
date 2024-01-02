@@ -166,9 +166,9 @@ const ListeTeeth = () => {
           .then((response) => setData(response.data))
           .catch((error) => console.error(error));
         toast.current.show({
-          severity: "info",
-          summary: "Confirmé",
-          detail: "Vous avez accepté",
+          severity: "success",
+          summary: "Success",
+          detail: "Dent supprimée.",
           life: 3000,
         });
       })
@@ -187,7 +187,7 @@ const ListeTeeth = () => {
     toast.current.show({
       severity: "warn",
       summary: "Rejeté",
-      detail: "Vous avez refusé",
+      detail: "Suppression annulée.",
       life: 3000,
     });
   };

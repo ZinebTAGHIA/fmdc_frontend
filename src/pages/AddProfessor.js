@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Form, Field } from "react-final-form";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -14,10 +14,12 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import { Password } from "primereact/password";
 import { MultiSelect } from "primereact/multiselect";
+import { Toast } from "primereact/toast";
 
 const AddProfessor = () => {
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState({});
+  const toast = useRef(null);
 
   const validate = (data) => {
     let errors = {};
@@ -33,9 +35,14 @@ const AddProfessor = () => {
     if (!data.password) {
       errors.password = "Password est obligatoire.";
     }
-    // if (!data.image) {
-    //   errors.image = "Image est obligatoire.";
-    // }
+    if (!data.email) {
+      errors.email = "Email est obligatoire.";
+    }
+    if (data.email) {
+      if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {
+        errors.email = "Adresse email invalide. E.g. example@email.com";
+      }
+    }
     if (!data.grade) {
       errors.grade = "Grade est obligatoire.";
     }
@@ -49,6 +56,7 @@ const AddProfessor = () => {
       axios
         .post(`/api/professors`, {
           userName: data.userName,
+          email: data.email,
           password: data.password,
           lastName: data.lastName,
           firstName: data.firstName,
@@ -57,13 +65,19 @@ const AddProfessor = () => {
         })
         .then((response) => {
           console.log(response);
+          setShowMessage(true);
+          form.restart();
         })
         .catch((error) => {
           console.error(error);
+          toast.current.show({
+            severity: "error",
+            summary: "Erreur",
+            detail: "Email ou Username déjà utilisé.",
+            life: 3000,
+          });
         });
-      setShowMessage(true);
     }
-    form.restart();
   };
 
   const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
@@ -86,6 +100,7 @@ const AddProfessor = () => {
   return (
     <div>
       <main>
+        <Toast ref={toast} />
         <h1 className="title"> Ajouter un professeur </h1>
         <div style={{ marginBottom: 40 }}>
           <ul className="breadcrumbs">
@@ -127,6 +142,7 @@ const AddProfessor = () => {
                     initialValues={{
                       lastName: "",
                       firstName: "",
+                      email: "",
                       userName: "",
                       grade: "",
                       password: "",
@@ -179,6 +195,32 @@ const AddProfessor = () => {
                                   })}
                                 >
                                   Prénom*
+                                </label>
+                              </span>
+                              {getFormErrorMessage(meta)}
+                            </div>
+                          )}
+                        />
+                        <Field
+                          name="email"
+                          render={({ input, meta }) => (
+                            <div className="field">
+                              <span className="p-float-label p-input-icon-right">
+                                <i className="pi pi-envelope" />
+                                <InputText
+                                  id="email"
+                                  {...input}
+                                  className={classNames({
+                                    "p-invalid": isFormFieldValid(meta),
+                                  })}
+                                />
+                                <label
+                                  htmlFor="email"
+                                  className={classNames({
+                                    "p-error": isFormFieldValid(meta),
+                                  })}
+                                >
+                                  Email*
                                 </label>
                               </span>
                               {getFormErrorMessage(meta)}

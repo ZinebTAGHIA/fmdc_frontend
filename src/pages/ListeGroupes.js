@@ -240,22 +240,29 @@ const ListeGroupes = () => {
           .get(`/api/groups`)
           .then((response) => setData(response.data))
           .catch((error) => console.error(error));
+        toast.current.show({
+          severity: "success",
+          summary: "Success",
+          detail: "Groupe supprimé.",
+          life: 3000,
+        });
       })
-      .catch((error) => console.error(error));
-
-    toast.current.show({
-      severity: "info",
-      summary: "Confirmé",
-      detail: "Vous avez accepté",
-      life: 3000,
-    });
+      .catch((error) => {
+        console.error(error);
+        toast.current.show({
+          severity: "error",
+          summary: "Erreur",
+          detail: "Ce groupe ne peut pas être supprimé !",
+          life: 3000,
+        });
+      });
   };
 
   const reject = () => {
     toast.current.show({
       severity: "warn",
       summary: "Rejeté",
-      detail: "Vous avez refusé",
+      detail: "Suppression annulée.",
       life: 3000,
     });
   };

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import logo from "../logos/fmdc_logo.png";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "../api/axios";
 import background from "./styles/background/background.png";
+import { Toast } from "primereact/toast";
 
 const Body = styled.body`
   background-image: url(${background});
@@ -127,9 +128,18 @@ const Login = ({ setUser }) => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [accountErrors, setAccountErrors] = useState("");
+  const [forgotPwd, setForgotPwd] = useState(false);
+  const [email, setEmail] = useState("");
+  const [token, setToken] = useState("");
+  const [loginFormView, setLoginFormView] = useState(true);
+  const [tokenFormView, setTokenFormView] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPwd, setConfirmNewPwd] = useState("");
+  const [resetFormView, setResetFormView] = useState(false);
 
   const shouldRedirect = localStorage.getItem("auth_token");
   const navigate = useNavigate();
+  const toast = useRef(null);
 
   useEffect(() => {
     if (shouldRedirect) {
@@ -173,44 +183,260 @@ const Login = ({ setUser }) => {
       });
   };
 
+  const handleSubmitForgotPwd = (e) => {
+    e.preventDefault();
+    if (!email) return;
+    axios
+      .post("/api/auth/forgotPassword", {
+        email: email,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(response.data);
+          setForgotPwd(false);
+          setTokenFormView(true);
+          setAccountErrors("");
+          showSuccess("Un code est envoyé à l'adresse email saisie.");
+        } else if (response.status === 404) {
+          setAccountErrors("Email invalide.");
+          return;
+        }
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 404) {
+          setAccountErrors("Email invalide.");
+        }
+      });
+  };
+
+  const handleSubmitToken = (e) => {
+    e.preventDefault();
+    if (!token) return;
+    axios
+      .post("/api/auth/tokenValidation", {
+        token: token,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(response.data);
+          setTokenFormView(false);
+          setResetFormView(true);
+          setAccountErrors("");
+          showSuccess(
+            "Code valide, vous pouvez réinitialiser votre mot de passe."
+          );
+        } else if (response.status === 404) {
+          setAccountErrors("Code invalide.");
+          return;
+        } else if (response.status === 410) {
+          setAccountErrors("Code expiré.");
+          return;
+        }
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 404) {
+          setAccountErrors("Code invalide.");
+        } else if (error.response && error.response.status === 410) {
+          setAccountErrors("Code expiré.");
+        }
+      });
+  };
+
+  const handleSubmitPasswordReset = (e) => {
+    e.preventDefault();
+    if (!newPassword || !confirmNewPwd) return;
+    if (newPassword !== confirmNewPwd) {
+      setAccountErrors(
+        "Désolé, les mots de passe ne correspondent pas. Réessayez."
+      );
+      return;
+    }
+    axios
+      .post("/api/auth/resetPassword", {
+        newPassword: newPassword,
+        token: token,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(response.data);
+          setResetFormView(false);
+          setLoginFormView(true);
+          setAccountErrors("");
+          showSuccess("Mot de passe réinitialisé avec succès.");
+        } else if (response.status === 404) {
+          setAccountErrors("Code invalide.");
+          return;
+        } else if (response.status === 410) {
+          setAccountErrors("Code expiré.");
+          return;
+        }
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 404) {
+          setAccountErrors("Code invalide.");
+        } else if (error.response && error.response.status === 410) {
+          setAccountErrors("Code expiré.");
+        }
+      });
+  };
+  const onForgotPasswordClick = (e) => {
+    e.preventDefault();
+    setLoginFormView(false);
+    setForgotPwd(true);
+    setAccountErrors("");
+  };
+
+  const onLoginClick = (e) => {
+    e.preventDefault();
+    setLoginFormView(true);
+    setForgotPwd(false);
+    setTokenFormView(false);
+    setResetFormView(false);
+    setAccountErrors("");
+  };
+
+  const showSuccess = (message) => {
+    toast.current.show({
+      severity: "success",
+      summary: "Success",
+      detail: message,
+      life: 3000,
+    });
+  };
+
   return (
     <Body>
       <Container>
         <div className="container">
+          <Toast ref={toast} />
           <div className="wrapper">
             <div className="title">
               <img src={logo}></img>
             </div>
-            <form className="form" onSubmit={handleSubmit}>
-              <div className="row">
-                <i className="bx bxs-user" />
-                <input
-                  type="text"
-                  placeholder="Identifiant"
-                  id="login"
-                  value={login}
-                  onChange={(e) => setLogin(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="row">
-                <i className="bx bxs-lock-alt"></i>
-                <input
-                  type="password"
-                  placeholder="Mot de passe"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  id="password"
-                  required
-                />
-              </div>
-              <span style={{ color: "red" }}>{accountErrors}</span>
-              <div className="btn-pass">
-                <div className="row button">
-                  <input type="submit" value="Connexion" />
+            {loginFormView && (
+              <form className="form" onSubmit={handleSubmit}>
+                <div className="row">
+                  <i className="bx bxs-user" />
+                  <input
+                    type="text"
+                    placeholder="Identifiant"
+                    id="login"
+                    value={login}
+                    onChange={(e) => setLogin(e.target.value)}
+                    required
+                  />
                 </div>
-              </div>
-            </form>
+                <div className="row">
+                  <i className="bx bxs-lock-alt"></i>
+                  <input
+                    type="password"
+                    placeholder="Mot de passe"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    id="password"
+                    required
+                  />
+                </div>
+                <span style={{ color: "red" }}>{accountErrors}</span>
+                <div className="btn-pass">
+                  <div className="row button">
+                    <input type="submit" value="Connexion" />
+                  </div>
+                </div>
+                <NavLink
+                  style={{ color: "#3b82f6" }}
+                  onClick={onForgotPasswordClick}
+                >
+                  Mot de passe oublié ?
+                </NavLink>
+              </form>
+            )}
+
+            {forgotPwd && (
+              <form className="form" onSubmit={handleSubmitForgotPwd}>
+                <div className="row">
+                  <i className="bx bxs-envelope" />
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <span style={{ color: "red" }}>{accountErrors}</span>
+                <div className="btn-pass">
+                  <div className="row button">
+                    <input type="submit" value="Réinitialiser" />
+                  </div>
+                </div>
+                <NavLink style={{ color: "#3b82f6" }} onClick={onLoginClick}>
+                  Se connecter ?
+                </NavLink>
+              </form>
+            )}
+
+            {tokenFormView && (
+              <form className="form" onSubmit={handleSubmitToken}>
+                <div className="row">
+                  <i className="bx bx-key" />
+                  <input
+                    type="text"
+                    placeholder="Code"
+                    id="token"
+                    value={token}
+                    onChange={(e) => setToken(e.target.value)}
+                    required
+                  />
+                </div>
+                <span style={{ color: "red" }}>{accountErrors}</span>
+                <div className="btn-pass">
+                  <div className="row button">
+                    <input type="submit" value="Envoyer" />
+                  </div>
+                </div>
+                <NavLink style={{ color: "#3b82f6" }} onClick={onLoginClick}>
+                  Se connecter ?
+                </NavLink>
+              </form>
+            )}
+
+            {resetFormView && (
+              <form className="form" onSubmit={handleSubmitPasswordReset}>
+                <div className="row">
+                  <i className="bx bxs-lock-alt"></i>
+                  <input
+                    type="password"
+                    placeholder="Nouveau mot de passe"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    id="password"
+                    required
+                  />
+                </div>
+                <div className="row">
+                  <i className="bx bxs-lock-alt"></i>
+                  <input
+                    type="password"
+                    placeholder="Confirmer le mot de passe"
+                    value={confirmNewPwd}
+                    onChange={(e) => setConfirmNewPwd(e.target.value)}
+                    id="password"
+                    required
+                  />
+                </div>
+                <span style={{ color: "red" }}>{accountErrors}</span>
+                <div className="btn-pass">
+                  <div className="row button">
+                    <input type="submit" value="Enregistrer" />
+                  </div>
+                </div>
+                <NavLink style={{ color: "#3b82f6" }} onClick={onLoginClick}>
+                  Se connecter ?
+                </NavLink>
+              </form>
+            )}
           </div>
         </div>
       </Container>

@@ -216,9 +216,9 @@ const ListProfesseurs = () => {
           .then((response) => setData(response.data))
           .catch((error) => console.error(error));
         toast.current.show({
-          severity: "info",
-          summary: "Confirmé",
-          detail: "Vous avez accepté",
+          severity: "success",
+          summary: "Success",
+          detail: "Professeur supprimé.",
           life: 3000,
         });
       })

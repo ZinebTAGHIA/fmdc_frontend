@@ -89,7 +89,8 @@ const Container = styled.div`
   }
 
   input[type="text"],
-  input[type="password"] {
+  input[type="password"],
+  input[type="email"] {
     width: 300px;
     height: 35px;
     border-radius: 3px;
@@ -100,11 +101,12 @@ const Container = styled.div`
     font-weight: normal;
   }
   #userName:hover,
-  #password:hover {
+  #password:hover,
+  #email:hover {
     border-color: #2196f3;
   }
   #userName:focus,
-  #userName:focus,
+  #email:focus,
   #password:focus {
     border-color: #2196f3;
     box-shadow: 0 0 0 1px #2196f3, 0 0 0 3px rgba(33, 150, 243, 0.3);
@@ -144,7 +146,6 @@ const Profil = (props) => {
       })
       .catch((error) => console.error(error));
   }, []);
-
   const onModifierClick = () => {
     const inputs = document.querySelectorAll(".text-base");
     inputs.forEach((input) => {
@@ -162,6 +163,7 @@ const Profil = (props) => {
         lastName: newData.lastName,
         firstName: newData.firstName,
         userName: newData.userName,
+        email: newData.email,
         password: newData.password,
       })
       .then((response) => {
@@ -170,24 +172,29 @@ const Profil = (props) => {
           .get(`/api/professors/${props.user.id}`)
           .then((response) => setData(response.data))
           .catch((error) => console.error(error));
+        toast.current.show({
+          severity: "success",
+          summary: "Success",
+          detail: "Données modifiées.",
+          life: 3000,
+        });
       })
       .catch((error) => {
         console.error(error);
+        toast.current.show({
+          severity: "error",
+          summary: "Erreur",
+          detail: "Email ou Username déjà utilisé.",
+          life: 3000,
+        });
       });
-
-    toast.current.show({
-      severity: "info",
-      summary: "Confirmé",
-      detail: "Vous avez accepté",
-      life: 3000,
-    });
   };
 
   const reject = () => {
     toast.current.show({
       severity: "warn",
       summary: "Rejeté",
-      detail: "Vous avez refusé",
+      detail: "Modification annulée.",
       life: 3000,
     });
   };
@@ -207,18 +214,20 @@ const Profil = (props) => {
     const firstName = document.getElementById("firstName").value;
     const userName = document.getElementById("userName").value;
     const password = document.getElementById("password").value;
+    const email = document.getElementById("email").value;
 
     let newData = {};
     if (password === "") {
-      newData = { lastName, firstName, userName };
+      newData = { lastName, firstName, userName, email };
     } else {
-      newData = { lastName, firstName, userName, password };
+      newData = { lastName, firstName, userName, password, email };
     }
 
     if (
-      lastName !== props.user.id ||
-      firstName !== props.user.id ||
-      userName !== props.user.id ||
+      lastName !== data.lastName ||
+      firstName !== data.firstName ||
+      userName !== data.userName ||
+      email !== data.email ||
       password !== ""
     ) {
       confirm1(newData);
@@ -368,6 +377,18 @@ const Profil = (props) => {
                           defaultValue={""}
                         />
                       </div>
+                      <div className="field col-12 md:col-6">
+                        <label htmlFor="email">Email</label>
+                        <input
+                          id="email"
+                          type="email"
+                          className="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                          disabled
+                          defaultValue={data.email}
+                        />
+                      </div>
+                      <div className="field col-12 md:col-3"></div>
+
                       <div className="field col-12 md:col-3">
                         <Button
                           label="Modifier"

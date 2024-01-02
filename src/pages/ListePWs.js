@@ -102,7 +102,6 @@ const ListePWs = () => {
                     initialValues={{
                       title: currentPW ? currentPW.title : "",
                       objectif: currentPW ? currentPW.objectif : "",
-                      docs: currentPW ? currentPW.docs : "",
                       tooth:
                         currentPW && currentPW.tooth ? currentPW.tooth.id : "",
                       groups: "",
@@ -155,31 +154,6 @@ const ListePWs = () => {
                                   })}
                                 >
                                   Objectif*
-                                </label>
-                              </span>
-                              {getFormErrorMessage(meta)}
-                            </div>
-                          )}
-                        />
-                        <Field
-                          name="docs"
-                          render={({ input, meta }) => (
-                            <div className="field">
-                              <span className="p-float-label">
-                                <InputText
-                                  id="docs"
-                                  {...input}
-                                  className={classNames({
-                                    "p-invalid": isFormFieldValid(meta),
-                                  })}
-                                />
-                                <label
-                                  htmlFor="docs"
-                                  className={classNames({
-                                    "p-error": isFormFieldValid(meta),
-                                  })}
-                                >
-                                  Docs*
                                 </label>
                               </span>
                               {getFormErrorMessage(meta)}
@@ -321,22 +295,29 @@ const ListePWs = () => {
           .get(`/api/pws`)
           .then((response) => setData(response.data))
           .catch((error) => console.error(error));
+        toast.current.show({
+          severity: "success",
+          summary: "Success",
+          detail: "TP supprimé.",
+          life: 3000,
+        });
       })
-      .catch((error) => console.error(error));
-
-    toast.current.show({
-      severity: "info",
-      summary: "Confirmé",
-      detail: "Vous avez accepté",
-      life: 3000,
-    });
+      .catch((error) => {
+        console.error(error);
+        toast.current.show({
+          severity: "error",
+          summary: "Erreur",
+          detail: "Ce TP ne peut pas être supprimé !",
+          life: 3000,
+        });
+      });
   };
 
   const reject = () => {
     toast.current.show({
       severity: "warn",
       summary: "Rejeté",
-      detail: "Vous avez refusé",
+      detail: "Suppression annulée.",
       life: 3000,
     });
   };
@@ -361,7 +342,6 @@ const ListePWs = () => {
         .put(`/api/pws/${currentPW.id}`, {
           title: data.title,
           objectif: data.objectif,
-          docs: data.docs,
           tooth: {
             id: data.tooth,
           },
@@ -396,9 +376,6 @@ const ListePWs = () => {
     }
     if (!data.objectif) {
       errors.objectif = "Objectif est obligatoire.";
-    }
-    if (!data.docs) {
-      errors.docs = "Docs est obligatoire.";
     }
     if (!data.tooth) {
       errors.tooth = "Dent est obligatoire.";
@@ -484,7 +461,6 @@ const ListePWs = () => {
               <Column key="id" field="id" header="ID" sortable />
               <Column key="title" field="title" header="Titre" />
               <Column key="objectif" field="objectif" header="Objectif" />
-              <Column key="docs" field="docs" header="Docs" />
               <Column
                 key="tooth"
                 field={(rowData) => rowData.tooth.name}
