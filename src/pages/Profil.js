@@ -257,9 +257,7 @@ const Profil = (props) => {
                 props.setPhoto(imageUrl);
                 setPhoto(imageUrl);
               })
-              .catch((error) => {
-                console.error("Error fetching image:", error);
-              });
+              .catch((error) => {});
           })
           .catch((error) => {});
       })
