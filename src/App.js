@@ -36,9 +36,7 @@ function App() {
           const imageUrl = URL.createObjectURL(blob);
           setPhoto(imageUrl);
         })
-        .catch((error) => {
-          console.error("Error fetching image:", error);
-        });
+        .catch((error) => {});
     }
   }, [user]);
 
